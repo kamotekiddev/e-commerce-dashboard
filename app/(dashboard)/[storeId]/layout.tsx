@@ -2,6 +2,7 @@ import { ReactNode } from "react";
 import { redirect } from "next/navigation";
 import { auth } from "@clerk/nextjs";
 import prismadb from "@/lib/prismadb";
+import Navbar from "@/components/Navbar";
 
 interface Props {
   children: ReactNode;
@@ -18,7 +19,12 @@ const Layout = async ({ children, params: { storeId } }: Props) => {
 
   if (!store) redirect("/sign-in");
 
-  return <div>{children}</div>;
+  return (
+    <div>
+      <Navbar />
+      {children}
+    </div>
+  );
 };
 
 export default Layout;
