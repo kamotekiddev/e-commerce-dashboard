@@ -11,7 +11,7 @@ export async function POST(request: Request) {
     if (!userId) return new NextResponse("Unauthorized", { status: 401 });
     if (!name) return new NextResponse("Name is required", { status: 400 });
 
-    const existingStore = await prismadb.store.findMany({ where: { name } });
+    const existingStore = await prismadb.store.findFirst({ where: { name } });
     if (existingStore)
       return new NextResponse("Store already exist", { status: 400 });
 

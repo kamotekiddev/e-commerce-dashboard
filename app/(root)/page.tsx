@@ -1,3 +1,14 @@
+"use client";
+
+import useStoreModal from "@/hooks/store/useStoreModal";
+import { useEffect } from "react";
+
 export default function Home() {
-  return <div className="p-4">This is the content</div>;
+  const { isOpen, onOpen } = useStoreModal();
+
+  useEffect(() => {
+    if (!isOpen) onOpen();
+  }, [isOpen, onOpen]);
+
+  return null;
 }

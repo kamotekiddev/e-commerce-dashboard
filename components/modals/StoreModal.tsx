@@ -24,7 +24,9 @@ const defaultValues: z.infer<typeof formSchema> = {
 
 const StoreModal = () => {
   const { isOpen, onClose } = useStoreModal();
-  const { mutate, isLoading, isError, error } = useCreateStoreMutation();
+  const { mutate, isLoading, isError, error } = useCreateStoreMutation(
+    (store) => window.location.assign(`/${store.id}`)
+  );
 
   const form = useForm<z.infer<typeof formSchema>>({
     defaultValues,
@@ -32,9 +34,7 @@ const StoreModal = () => {
   });
 
   const handleClose = () => onClose();
-  const onSubmit = (values: z.infer<typeof formSchema>) => {
-    mutate(values);
-  };
+  const onSubmit = (values: z.infer<typeof formSchema>) => mutate(values);
 
   return (
     <Modal
