@@ -12,7 +12,8 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import useStoreModal from "@/hooks/useStoreModal";
+import useStoreModal from "@/hooks/store/useStoreModal";
+import useCreateStoreMutation from "@/hooks/store/useCreateStoreMutation";
 import Modal from ".";
 
 const formSchema = z.object({ name: z.string().nonempty() });
@@ -23,6 +24,7 @@ const defaultValues: z.infer<typeof formSchema> = {
 
 const StoreModal = () => {
   const { isOpen, onClose } = useStoreModal();
+  const { mutate, isLoading, isError, error } = useCreateStoreMutation();
 
   const form = useForm<z.infer<typeof formSchema>>({
     defaultValues,
@@ -31,7 +33,7 @@ const StoreModal = () => {
 
   const handleClose = () => onClose();
   const onSubmit = (values: z.infer<typeof formSchema>) => {
-    console.log(values);
+    mutate(values);
   };
 
   return (
@@ -43,7 +45,7 @@ const StoreModal = () => {
     >
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
-          <div className="my-4">
+          <div className="space-y-4">
             <FormField
               control={form.control}
               name="name"
@@ -51,18 +53,30 @@ const StoreModal = () => {
                 <FormItem>
                   <FormLabel>Store Name</FormLabel>
                   <FormControl>
-                    <Input {...field} />
+                    <Input {...field} disabled={isLoading} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
-          </div>
-          <div className="flex gap-4 justify-end">
-            <Button type="button" variant="outline" onClick={handleClose}>
-              Cancel
-            </Button>
-            <Button type="submit">Create</Button>
+            {isError && (
+              <div className="text-sm p-4 rounded-lg bg-rose-50 text-rose-500">
+                {error.response?.data as string}
+              </div>
+            )}
+            <div className="flex gap-4 justify-end">
+              <Button
+                type="button"
+                variant="outline"
+                disabled={isLoading}
+                onClick={handleClose}
+              >
+                Cancel
+              </Button>
+              <Button type="submit" disabled={isLoading}>
+                Create
+              </Button>
+            </div>
           </div>
         </form>
       </Form>
